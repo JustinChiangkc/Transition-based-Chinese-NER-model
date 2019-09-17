@@ -8,6 +8,7 @@ Environment:
 	run.py
 
 -Instructions:
+	
 	1. Parameter setting:
 		a. --model_path "../save_model/save_XX/model.pth"
 			i.   save_65: weiboNER
@@ -21,6 +22,7 @@ Environment:
 	test.py
 
 -Instructions:
+	
 	1.parameters setting:
 		a. model selection
 			--model_path "../save_model/save_XX/model.pth"
@@ -41,6 +43,7 @@ Environment:
 	main.py
 
 -Instructions:
+	
 	1.parameters setting:
 		a. data selection:
 			--data_path "../data/insurance_dataset/"
@@ -57,6 +60,7 @@ Environment:
 	Oracle_NER.py
 
 -Instructions:
+	
 	1.parameters setting:
 		a. Original NER tagged corpus:
 		 	-f NER_tagged_corpus 
