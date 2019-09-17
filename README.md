@@ -76,4 +76,6 @@ Environment:
 		b. File for configuration:
 			-o file_for_configuration
 			**Configuration would be from 0.json to n.json (each .json represent a sentence)
+	
+	2. Run "Oracle.py" to produce Configurations.
 
