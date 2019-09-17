@@ -1,6 +1,3 @@
-readme
-
-
 Environment:
 1. python3.6
 2. Pytorch1.0.0
