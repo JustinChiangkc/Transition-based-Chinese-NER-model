@@ -1,25 +1,27 @@
 
 # Transition-based-Chinese-NER-model
-The model is a Chinese named-entity recognition model using transition-based method that can achieve squential time in condicting word segmentation and NER.
+The model is a Chinese named-entity recognition model using transition-based method that can achieve squential time in conducting word segmentation and NER tagging for Chinese corpus.
 
 ## Environment setting:
-* python 3.6
+* Python 3.6
 * Pytorch 1.0.0
 
 
 ## Desired labeling
 
-1. BIO scheme NER labeling 
-2. CoNLL NER format
+* BIO scheme NER labeling 
+* CoNLL tagging format
 
- ex: 
+ex: 
+
 	你	O
 	從	O
 	日	B-GPE
 	本	I-GPE
 	回	O
 	來	O
-	嘛	O 
+	嘛	O
+
 
 ## Data structures
 
@@ -27,7 +29,7 @@ The model is a Chinese named-entity recognition model using transition-based met
  * **stack** - working memory for entity candidate
  * **output buffer** - sequence of NER labeled segments
 
-## Operations
+## Operations(transitions)
 
  * `SHIFT` - move token from **buffer** to top of **stack**
  * `REDUCE(X)` - all words on **stack** are popped, combined to form a segment and labeled with `X` and copied to **output buffer**
@@ -40,6 +42,9 @@ The model is a Chinese named-entity recognition model using transition-based met
 ### Data preprocessing - generate configuration
 The first step of using transition-based method is to convert the BIO NER tagging to transition-based configuration
 
+```bash
+	python3 Oracle_NER.py -f CoNLL_inputfile -o "output_directory"
+```
 ex: 
 
 	你	O
@@ -62,9 +67,7 @@ Corresponding sequence of operations, Oracle:
 	OUT
 
 
-```bash
-	python3 Oracle_NER.py -f CoNLL_inputfile -o "output_directory"
-```
+
 
 ### Training
 
