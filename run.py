@@ -27,16 +27,6 @@ def str2bool(v):
     else:
         raise argparse.ArgumentTypeError('Boolean value expected.')
 
-def load_hidden_size(model_path):
-    # model_path is full model_path, we are going to find the args.txt file in same dir
-    model_dir = os.path.dirname(model_path)
-    args_path = os.path.join(model_dir, 'args.txt')
-    with open(args_path, 'r') as f:
-        for line in f:
-            if line.split(',')[0] == 'hidden_size':
-                return int(line.strip().split(',')[1])
-        else:
-            raise ValueError(f"No hidden_size mentioned in {args_path}")
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--cuda", type=str2bool, nargs='?', const=True, default=True)
@@ -68,7 +58,6 @@ print('meta_data', meta_data)
 ######################## building models #########################
 
 print(f'{dt.now()} Building model')
-#hidden_size = load_hidden_size(args.model_path)
 hidden_size = 2048
 model = FFN(word_char_embedding, hidden_size, output_class, dropout_rate=0.4).cuda()
 model.load_state_dict(torch.load(args.model_path))
@@ -101,8 +90,6 @@ def ner_result():
     rlt = NERdecoder(request.form['query'])
     return render_template('result.html',rlt=rlt)
 
-
-# api.add_resource(NER, '/ner_tagger/<string:todo_id>')
 
 if __name__ == '__main__':
     app.run(debug=True,host='0.0.0.0')

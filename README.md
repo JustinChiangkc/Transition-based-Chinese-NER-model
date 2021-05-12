@@ -1,81 +1,95 @@
-Environment:
-1. python3.6
-2. Pytorch1.0.0
+
+# Transition-based-Chinese-NER-model
+The model is a Chinese named-entity recognition model using transition-based method that can achieve squential time in condicting word segmentation and NER.
+
+## Environment setting:
+* python 3.6
+* Pytorch 1.0.0
 
 
-<Run the API>
--File name:
-	run.py
+## Desired labeling
 
--Instructions:
-	
-	1. Parameter setting:
-		a. --model_path "../save_model/save_XX/model.pth"
-			i.   save_65: weiboNER
-			ii.  save_68: ontonotesNER
-			iii. save_75: insurance_conversationNER
-	2. Run "run.py" and send POST requests to your [URL]/ner_tagger to check NER result, ex: (http://doraemon.iis.sinica.edu.tw/ner_tagger/)
+1. BIO scheme NER labeling 
+2. CoNLL NER format
 
+ ex: 
+	你	O
+	從	O
+	日	B-GPE
+	本	I-GPE
+	回	O
+	來	O
+	嘛	O 
 
-<Test model performance on corpus to see F1 score>
--File name:
-	test.py
+## Data structures
 
--Instructions:
-	
-	1.parameters setting:
-		a. model selection
-			--model_path "../save_model/save_XX/model.pth"
-			i.   save_65: weiboNER
-			ii.  save_68: ontonotesNER
-			iii. save_75: insurance_conversationNER
-		b. test set selection
-			--testset_path "../data/insurance_dataset/test"
-			i.   "../data/weiboNER/test" : weiboNER testset
-			ii.  "../data/ontonotes-release-4.0/test" : ontonoteNER testset##################################
-			iii. "../data/insurance_dataset/test" : insurance conversation NER testset
+ * **buffer** - sequence of tokens to be processed
+ * **stack** - working memory for entity candidate
+ * **output buffer** - sequence of NER labeled segments
 
-	2. Run "test.py" and check F1 score.
+## Operations
+
+ * `SHIFT` - move token from **buffer** to top of **stack**
+ * `REDUCE(X)` - all words on **stack** are popped, combined to form a segment and labeled with `X` and copied to **output buffer**
+ * `OUT` - move one token from **buffer** to **output buffer**
 
 
-<Train new model>
--File name:
-	main.py
-
--Instructions:
-	
-	1.parameters setting:
-		a. data selection:
-			--data_path "../data/insurance_dataset/"
-			i.   "../data/weiboNER/" : weiboNER dataset
-			ii.  "../data/ontonotes-release-4.0/" : ontonoteNER dataset
-			iii. "../data/insurance_dataset/" : insurance conversation NER dataset
-
-	2. Run "main.py" to train.
+## Usage
 
 
+### Data preprocessing - generate configuration
+The first step of using transition-based method is to convert the BIO NER tagging to transition-based configuration
 
-<Generate Configuration>
--File name:
-	Oracle_NER.py
+ex: 
 
--Instructions:
-	
-	1.parameters setting:
-		a. Original NER tagged corpus:
-		 	-f NER_tagged_corpus 
-		 	**original NER tagging dataset in CoNLL NER tagging format and BIO scheme
-		 		ex: 
-			 		你	O
-					從	O
-					日	B-GPE
-					本	I-GPE
-					回	O
-					來	O
-					嘛	O 
-		b. File for configuration:
-			-o file_for_configuration
-			**Configuration would be from 0.json to n.json (each .json represent a sentence)
-	
-	2. Run "Oracle.py" to produce Configurations.
+	你	O
+	從	O
+	日	B-GPE
+	本	I-GPE
+	回	O
+	來	O
+	嘛	O 
+
+Corresponding sequence of operations, Oracle:
+
+	OUT
+	OUT
+	SHIFT
+	SHIFT
+	REDUCE(GPE)
+	OUT
+	OUT
+	OUT
+
+
+```bash
+	python3 Oracle_NER.py -f CoNLL_inputfile -o "output_directory"
+```
+
+### Training
+
+```bash
+	python3 main.py --data_path "traning_data_directory"
+```
+
+
+### Evaluation
+
+```bash
+	python3 test.py --model_path "model_path" --testset_path "testing_data_directory"
+```
+
+### Run API
+
+
+```bash
+	python3 run.py --model_path "model_path"
+```
+*  Send POST requests to the url, [URL]/ner_tagger, to check NER result, ex: (http://chineseNER.com/ner_tagger/)
+
+
+
+
+
+
 

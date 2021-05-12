@@ -32,7 +32,7 @@ def read_corpus_ner(lines, word_count):
                 word_count[line[0]] = 1
             tmp_ll.append(line[-1])################entity
             if len(line[-1].split('-')) > 1:
-                if line[-1].split('-')[0] == "B" and not ner_label == "":####ner_label???
+                if line[-1].split('-')[0] == "B" and not ner_label == "":####ner_label
                     tmp_al.append(ner_label)
                     count_ner += 1
                 ner_label = "REDUCE-"+line[-1].split('-')[1].split('.')[0]
